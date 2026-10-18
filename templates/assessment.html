@@ -2,17 +2,26 @@
 {% block title %}Self-assessment{% endblock %}
 {% block content %}
 <div class="narrow">
-  <span class="eyebrow">SELF-REFLECTION</span><h1>What gets in the way?</h1>
-  <p class="lead small-lead">Choose how often each statement feels true for you. There are no right or wrong answers.</p>
-  <div class="notice"><b>A note about this assessment</b><br>This is an illustrative self-reflection questionnaire, not a validated psychological test or diagnosis. Your answers are used to suggest practical strategies.</div>
-  <form method="post" class="assessment-form">
+  <span class="eyebrow">SELF-REFLECTION</span>
+  <h1>What gets in the way?</h1>
+  <p class="lead small-lead">Choose how often each statement feels true for you. There are no right or wrong answers. Results are habit guidance, not a diagnosis.</p>
+  <div class="assess-progress-wrap">
+    <div class="assess-progress-label" id="assessProgressLabel">0 of {{ questions|length }} answered</div>
+    <div class="progress-track assess-progress" aria-hidden="true"><span id="assessProgressBar"></span></div>
+  </div>
+  <div class="notice"><b>A note about this assessment</b><br>This is an illustrative self-reflection questionnaire, not a validated psychological test. Your answers suggest practical next steps only.</div>
+  <form method="post" class="assessment-form" id="assessmentForm">
     {% for category, question in questions %}
       {% set question_index = loop.index0 %}
       <fieldset class="question">
         <legend><span class="question-number">{{ loop.index }}</span>{{ question }}</legend>
         <div class="scale">
           {% for value, label in [(1,'Never'),(2,'Rarely'),(3,'Sometimes'),(4,'Often'),(5,'Almost always')] %}
-            <label class="scale-option"><input type="radio" name="q{{ question_index }}" value="{{ value }}" required><span>{{ value }}</span><small>{{ label }}</small></label>
+            <label class="scale-option" for="q{{ question_index }}_{{ value }}">
+              <input id="q{{ question_index }}_{{ value }}" type="radio" name="q{{ question_index }}" value="{{ value }}" required>
+              <span>{{ value }}</span>
+              <small>{{ label }}</small>
+            </label>
           {% endfor %}
         </div>
       </fieldset>
@@ -20,4 +29,7 @@
     <button class="button primary full" type="submit">Save my reflection</button>
   </form>
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/assessment.js') }}"></script>
 {% endblock %}

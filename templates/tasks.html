@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">YOUR SPACE</span>
+    <h1>Your tasks 🌱</h1>
+    <p class="lead small-lead">Every little step counts. Choose one thing to work on.</p>
+  </div>
+  <a class="button primary" href="{{ url_for('new_task') }}">Add a task</a>
+</div>
+
+<section class="panel">
+  {% if tasks %}
+    {% for task in tasks %}
+      <div class="section-heading">
+        <div>
+          <h2>{{ task.title }}</h2>
+          <p>{{ task.description or "One little step at a time." }}</p>
+          <span class="chip">{{ task.status|title }}</span>
+        </div>
+        <a class="button secondary" href="{{ url_for('task_detail', task_id=task.id) }}">View task</a>
+      </div>
+      {% if not loop.last %}<hr>{% endif %}
+    {% endfor %}
+  {% else %}
+    <h2>Your task garden is waiting 🌷</h2>
+    <p>You haven't added any tasks yet. That's okay—start with one small thing.</p>
+    <a class="button primary" href="{{ url_for('new_task') }}">Create your first task</a>
+  {% endif %}
+</section>
+{% endblock %}

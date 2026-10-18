@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -82,6 +82,14 @@ def log_event(user_id, event_type, task_id=None):
     db.session.add(ActivityLog(user_id=user_id, event_type=event_type, task_id=task_id))
 
 
+SUPPORTIVE_NOTES = (
+    "A tiny start still counts.",
+    "You can make progress without feeling completely ready.",
+    "One small step is enough for now.",
+    "Done is not the only kind of progress. Starting matters too.",
+)
+
+
 def recommendation_for(scores):
     if not scores:
         return {
@@ -117,15 +125,49 @@ def recommendation_for(scores):
             "Ask for support if the task or distress feels unmanageable."
         ])
     }
-    return {"barrier": strategies[barrier][0], "items": strategies[barrier][1]}
+    label, items = strategies.get(barrier, strategies["task_overwhelm"])
+    return {"barrier": label, "items": list(items)}
+
+
+def recommendation_items(recommendation):
+    if not isinstance(recommendation, dict):
+        return []
+    items = recommendation.get("items")
+    if isinstance(items, list):
+        return [item for item in items if item]
+    return []
+
+
+def choose_first_step(pending_tasks):
+    if not pending_tasks:
+        return None
+    return sorted(
+        pending_tasks,
+        key=lambda task: (
+            task.due_date is None,
+            task.due_date or date.max,
+            task.created_at or datetime.min,
+        ),
+    )[0]
+
+
+def supportive_note(total, completed):
+    if total == 0:
+        return SUPPORTIVE_NOTES[0]
+    if completed == 0:
+        return SUPPORTIVE_NOTES[1]
+    if completed >= total:
+        return SUPPORTIVE_NOTES[3]
+    return SUPPORTIVE_NOTES[2]
 
 
 @app.route("/")
 def index():
-    if "user_id" in session:
-        return redirect(url_for("dashboard"))
-    return render_template("index.html")
+    return render_template("little_by_little.html")
 
+@app.route("/little-by-little")
+def little_by_little():
+    return render_template("little_by_little.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -179,9 +221,33 @@ def dashboard():
     assessment = Assessment.query.filter_by(user_id=uid).order_by(Assessment.created_at.desc()).first()
     scores = assessment.scores_json if assessment else {}
     recommendation = recommendation_for(scores)
-    return render_template("dashboard.html", tasks=tasks, total=total, completed=completed,
-                           pending_count=len(pending), focus_count=focus_count,
-                           recommendation=recommendation, has_assessment=bool(assessment))
+    items = recommendation_items(recommendation)
+    percent = int(round((completed / total) * 100)) if total else 0
+    garden_slots = 8
+    garden_grown = int(round((percent / 100) * garden_slots)) if total else 0
+    first_step = choose_first_step(pending)
+    next_action = None
+    if first_step:
+        next_action = next((subtask for subtask in first_step.subtasks if not subtask.completed), None)
+    return render_template(
+        "dashboard.html",
+        tasks=tasks,
+        total=total,
+        completed=completed,
+        pending_count=len(pending),
+        pending_tasks=pending,
+        focus_count=focus_count,
+        recommendation=recommendation,
+        recommendation_items=items,
+        has_assessment=bool(assessment),
+        completion_percent=percent,
+        garden_slots=garden_slots,
+        garden_grown=garden_grown,
+        first_step=first_step,
+        next_action=next_action,
+        supportive_note=supportive_note(total, completed),
+        today=date.today(),
+    )
 
 
 @app.route("/assessment", methods=["GET", "POST"])
@@ -217,7 +283,13 @@ def assessment():
         return redirect(url_for("dashboard"))
     return render_template("assessment.html", questions=questions)
 
-
+@app.route("/tasks")
+@login_required
+def tasks_page():
+    uid = session["user_id"]
+    tasks = Task.query.filter_by(user_id=uid).order_by(Task.created_at.desc()).all()
+    return render_template("tasks.html", tasks=tasks)
+    
 @app.route("/tasks/new", methods=["GET", "POST"])
 @login_required
 def new_task():
@@ -280,6 +352,44 @@ def toggle_subtask(subtask_id):
     else:
         subtask.task.status = "pending"
     db.session.commit()
+    return redirect(url_for("task_detail", task_id=subtask.task_id))
+
+
+@app.route("/tasks/<int:task_id>/complete", methods=["POST"])
+@login_required
+def complete_task(task_id):
+    task = Task.query.filter_by(id=task_id, user_id=session["user_id"]).first_or_404()
+    now = utcnow()
+    for subtask in task.subtasks:
+        if not subtask.completed:
+            subtask.completed = True
+            subtask.completed_at = now
+    task.status = "completed"
+    if not task.actual_start:
+        task.actual_start = now
+    log_event(session["user_id"], "task_completed", task.id)
+    db.session.commit()
+    flash("Nice work. That task is marked complete.", "success")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/subtasks/<int:subtask_id>/deadline", methods=["POST"])
+@login_required
+def update_subtask_deadline(subtask_id):
+    subtask = Subtask.query.join(Task).filter(
+        Subtask.id == subtask_id, Task.user_id == session["user_id"]
+    ).first_or_404()
+    raw = request.form.get("mini_deadline", "").strip()
+    if raw:
+        try:
+            subtask.mini_deadline = datetime.strptime(raw, "%Y-%m-%d").date()
+        except ValueError:
+            flash("Enter a valid mini-deadline date.", "error")
+            return redirect(url_for("task_detail", task_id=subtask.task_id))
+    else:
+        subtask.mini_deadline = None
+    db.session.commit()
+    flash("Mini-deadline saved.", "success")
     return redirect(url_for("task_detail", task_id=subtask.task_id))
 
 

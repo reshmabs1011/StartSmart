@@ -3,30 +3,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Stepwise{% endblock %} · Stepwise</title>
+  <title>{% block title %}StartSmart{% endblock %} · StartSmart</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="app{% if request.endpoint %} page-{{ request.endpoint }}{% endif %}">
+  <a class="skip-link" href="#main">Skip to content</a>
   <header class="topbar">
-    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">S</span> Stepwise</a>
-    <nav>
+    <a class="brand" href="{{ url_for('index') }}">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="brand-leaf"></span>
+      </span>
+      <span class="brand-text">StartSmart</span>
+    </a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
+    <label class="nav-toggle-label" for="nav-toggle">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+      <span class="visually-hidden">Menu</span>
+    </label>
+    <nav aria-label="Primary">
       {% if session.get('user_id') %}
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('assessment') }}">Assessment</a>
-        <a href="{{ url_for('new_task') }}">Add task</a>
-        <a href="{{ url_for('focus') }}">Focus</a>
-        <a href="{{ url_for('progress') }}">Progress</a>
+        <a href="{{ url_for('dashboard') }}"  {% if request.endpoint == 'dashboard' %}aria-current="page"{% endif %}>Home</a>
+        <a href="{{ url_for('assessment') }}" {% if request.endpoint == 'assessment' %}aria-current="page"{% endif %}>Assessment</a>
+        <a href="{{ url_for('tasks_page') }}" {% if request.endpoint in ['tasks_page', 'new_task', 'task_detail'] %}aria-current="page"{% endif %}>Tasks</a>
+        <a href="{{ url_for('focus') }}" {% if request.endpoint == 'focus' %}aria-current="page"{% endif %}>Focus Timer</a>
+        <a href="{{ url_for('progress') }}" {% if request.endpoint == 'progress' %}aria-current="page"{% endif %}>Progress</a>
         <a class="nav-cta" href="{{ url_for('logout') }}">Log out</a>
       {% else %}
-        <a href="{{ url_for('login') }}">Log in</a>
-        <a class="nav-cta" href="{{ url_for('register') }}">Get started</a>
+        <a href="{{ url_for('login') }}" {% if request.endpoint == 'login' %}aria-current="page"{% endif %}>Log in</a>
+        <a class="nav-cta" href="{{ url_for('register') }}">Start My Journey</a>
       {% endif %}
     </nav>
   </header>
-  <main class="container">
+  <main id="main" class="container">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <div class="flash-stack">
+        <div class="flash-stack" role="status">
           {% for category, message in messages %}
             <div class="flash {{ category }}">{{ message }}</div>
           {% endfor %}
@@ -35,6 +46,12 @@
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
-  <footer class="footer">Small steps count. This tool supports reflection and planning; it does not diagnose mental health conditions.</footer>
+  <footer class="footer">
+    <div class="footer-inner">
+      <p><strong>StartSmart</strong> — Progress, not pressure.</p>
+      <p>This space supports reflection and planning. It does not diagnose mental health conditions.</p>
+    </div>
+  </footer>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

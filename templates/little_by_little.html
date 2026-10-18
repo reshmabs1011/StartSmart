@@ -1,0 +1,2004 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6f0e6" />
+  <meta name="description" content="Little by Little — a cozy space to focus, make progress, and take care of yourself." />
+  <title>Little by Little ♡</title>
+
+  <style>
+    /* ---------- Color palette and global styles ---------- */
+    :root {
+      --cream: #f6f0e6;
+      --paper: #fffdf9;
+      --plum: #292640;
+      --muted: #827d91;
+      --lavender: #e8e1fa;
+      --lavender-dark: #b7a5e8;
+      --lime: #d7f36b;
+      --peach: #f8dfd2;
+      --sage: #dce9d7;
+      --border: #ece5dc;
+      --shadow: 0 12px 35px rgba(54, 43, 73, 0.07);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 5% 5%, rgba(232, 225, 250, 0.65), transparent 25%),
+        radial-gradient(circle at 95% 85%, rgba(215, 243, 107, 0.16), transparent 23%),
+        var(--cream);
+      color: var(--plum);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--lavender-dark);
+      outline-offset: 3px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p {
+      margin-top: 0;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.2;
+    }
+
+    /* ---------- Welcome screen ---------- */
+    .welcome-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .welcome-card {
+      width: min(100%, 500px);
+      padding: clamp(28px, 6vw, 52px);
+      text-align: center;
+      background: rgba(255, 253, 249, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 82px;
+      height: 82px;
+      margin: 0 auto 24px;
+      border-radius: 28px;
+      background: var(--lavender);
+      font-size: 2.4rem;
+      transform: rotate(-5deg);
+    }
+
+    .welcome-card h1 {
+      margin-bottom: 12px;
+      font-size: clamp(2.2rem, 7vw, 3.3rem);
+      letter-spacing: -0.06em;
+    }
+
+    .welcome-card .tagline {
+      margin-bottom: 28px;
+      color: var(--muted);
+    }
+
+    .welcome-card label {
+      display: block;
+      margin-bottom: 8px;
+      text-align: left;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .text-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+      color: var(--plum);
+      outline-offset: 2px;
+    }
+
+    .text-input::placeholder,
+    textarea::placeholder {
+      color: #aaa4b3;
+    }
+
+    .primary-button {
+      width: 100%;
+      margin-top: 14px;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 16px;
+      background: var(--plum);
+      color: white;
+      font-weight: 800;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .primary-button:hover {
+      background: #45405e;
+      transform: translateY(-2px);
+    }
+
+    .welcome-note {
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* ---------- Main dashboard layout ---------- */
+    .dashboard {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 24px clamp(16px, 3vw, 42px) 40px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      background: var(--lavender);
+      font-size: 1.35rem;
+    }
+
+    .brand-name {
+      font-size: 1.15rem;
+    }
+
+    .brand-subtitle {
+      display: block;
+      color: var(--muted);
+      font-size: 0.73rem;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .date-pill,
+    .soft-button {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 253, 249, 0.8);
+      color: var(--plum);
+      font-size: 0.83rem;
+    }
+
+    .soft-button:hover {
+      background: white;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 210px;
+      margin-bottom: 24px;
+      padding: clamp(26px, 5vw, 48px);
+      border-radius: 30px;
+      background: var(--lavender);
+    }
+
+    .hero::after {
+      position: absolute;
+      right: 6%;
+      bottom: -100px;
+      width: 250px;
+      height: 250px;
+      border: 1px solid rgba(41, 38, 64, 0.12);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 650px;
+    }
+
+    .hero h1 {
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 4.5vw, 3.3rem);
+      letter-spacing: -0.065em;
+    }
+
+    .hero p {
+      margin-bottom: 0;
+      color: #615a79;
+    }
+
+    .hero-illustration {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 130px;
+      height: 130px;
+      border-radius: 42px;
+      background: rgba(255, 253, 249, 0.72);
+      font-size: 4rem;
+      transform: rotate(5deg);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.85fr);
+      align-items: start;
+      gap: 24px;
+    }
+
+    .main-column,
+    .sidebar {
+      display: grid;
+      gap: 24px;
+      min-width: 0;
+    }
+
+    .panel {
+      min-width: 0;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 249, 0.94);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .panel-heading h2 {
+      margin-bottom: 5px;
+      font-size: 1.25rem;
+      letter-spacing: -0.035em;
+    }
+
+    .panel-description {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .tiny-badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--sage);
+      color: #455943;
+      font-size: 0.75rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* ---------- Task list ---------- */
+    .task-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .task-form input {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .add-button {
+      flex: 0 0 auto;
+      padding: 0 17px;
+      border: none;
+      border-radius: 15px;
+      background: var(--lime);
+      color: var(--plum);
+      font-weight: 900;
+    }
+
+    .add-button:hover {
+      filter: brightness(0.96);
+    }
+
+    .task-list {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+      transition: background 0.2s;
+    }
+
+    .task-item.completed {
+      background: #f7f8f1;
+    }
+
+    .task-check {
+      flex: 0 0 auto;
+      width: 19px;
+      height: 19px;
+      accent-color: #7eae78;
+      cursor: pointer;
+    }
+
+    .task-text {
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-size: 0.93rem;
+    }
+
+    .task-item.completed .task-text {
+      color: #9993a0;
+      text-decoration: line-through;
+    }
+
+    .delete-task {
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: #9d95a7;
+      font-size: 1.1rem;
+    }
+
+    .delete-task:hover {
+      background: var(--peach);
+      color: var(--plum);
+    }
+
+    .empty-state {
+      padding: 26px 12px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .empty-state span {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 2rem;
+    }
+
+    .task-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .text-button {
+      padding: 4px 0;
+      border: none;
+      background: transparent;
+      color: #6d5a9d;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    /* ---------- Focus and notes ---------- */
+    .focus-card {
+      padding: 20px;
+      border-radius: 19px;
+      background: #f8f5ff;
+    }
+
+    .focus-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .focus-card textarea,
+    .notes-textarea {
+      display: block;
+      width: 100%;
+      min-height: 95px;
+      resize: vertical;
+      padding: 14px;
+      border: 1px solid #e9e1f8;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--plum);
+      line-height: 1.6;
+    }
+
+    .save-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .save-button {
+      padding: 9px 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--plum);
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .save-status {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* ---------- Garden progress ---------- */
+    .garden-panel {
+      background: #f9fbf4;
+    }
+
+    .garden-stage {
+      display: grid;
+      place-items: center;
+      min-height: 145px;
+      margin-bottom: 16px;
+      padding: 18px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(215, 243, 107, 0.25), transparent 43%),
+        #eef3e6;
+      text-align: center;
+    }
+
+    .garden-plant {
+      margin-bottom: 4px;
+      font-size: 3.4rem;
+      transition: transform 0.3s;
+    }
+
+    .garden-stage:hover .garden-plant {
+      transform: translateY(-4px) rotate(-4deg);
+    }
+
+    .garden-caption {
+      margin: 0;
+      color: #586750;
+      font-size: 0.83rem;
+    }
+
+    .progress-track {
+      overflow: hidden;
+      height: 9px;
+      border-radius: 999px;
+      background: #e5e8de;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: #8cb77d;
+      transition: width 0.35s ease;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* ---------- Rotating quote widget ---------- */
+    .quote-panel {
+      position: relative;
+      overflow: hidden;
+      background: var(--plum);
+      color: white;
+    }
+
+    .quote-panel .eyebrow {
+      color: #c6bedf;
+    }
+
+    .quote-symbol {
+      color: var(--lime);
+      font-family: Georgia, serif;
+      font-size: 3.5rem;
+      line-height: 0.9;
+    }
+
+    .quote-text {
+      min-height: 96px;
+      margin: 14px 0 18px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      line-height: 1.4;
+    }
+
+    .quote-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .quote-count {
+      color: #c6bedf;
+      font-size: 0.78rem;
+    }
+
+    .quote-next {
+      width: 38px;
+      height: 38px;
+      border: 1px solid #5a5570;
+      border-radius: 50%;
+      background: transparent;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .quote-next:hover {
+      background: #45405e;
+    }
+
+    /* ---------- Gentle care reminders ---------- */
+    .reminder-panel {
+      background: #fff7f1;
+    }
+
+    .reminder-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .reminder-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .reminder-emoji {
+      display: grid;
+      place-items: center;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      background: var(--peach);
+      font-size: 1.2rem;
+    }
+
+    .reminder-item:nth-child(2) .reminder-emoji {
+      background: #dceef5;
+    }
+
+    .reminder-item:nth-child(3) .reminder-emoji {
+      background: var(--sage);
+    }
+
+    .reminder-item:nth-child(4) .reminder-emoji {
+      background: var(--lavender);
+    }
+
+    .reminder-item strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.86rem;
+    }
+
+    .reminder-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.79rem;
+    }
+
+    .reminder-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .reminder-controls label {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .reminder-controls select {
+      max-width: 150px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: white;
+      color: var(--plum);
+      font-size: 0.8rem;
+    }
+
+    /* ---------- Gentle pop-up toast ---------- */
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 20;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: min(360px, calc(100vw - 32px));
+      padding: 17px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      background: var(--paper);
+      box-shadow: 0 16px 45px rgba(41, 38, 64, 0.18);
+      animation: toast-in 0.35s ease both;
+    }
+
+    .toast-icon {
+      font-size: 1.5rem;
+    }
+
+    .toast strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .toast p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .toast-close {
+      margin-left: auto;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      padding: 28px 8px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .footer span {
+      color: #a27ac4;
+    }
+
+    /* ---------- Responsive layout ---------- */
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+      }
+
+      .reminder-panel {
+        grid-row: span 2;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .dashboard {
+        padding: 16px 14px 28px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        margin-bottom: 22px;
+      }
+
+      .brand-subtitle {
+        display: none;
+      }
+
+      .date-pill {
+        display: none;
+      }
+
+      .hero {
+        min-height: 0;
+        padding: 26px 22px;
+      }
+
+      .hero-illustration {
+        width: 72px;
+        height: 72px;
+        border-radius: 24px;
+        font-size: 2.3rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .panel {
+        padding: 19px;
+      }
+
+      .sidebar {
+        grid-template-columns: 1fr;
+      }
+
+      .reminder-panel {
+        grid-row: auto;
+      }
+
+      .task-form {
+        flex-wrap: wrap;
+      }
+
+      .task-form input {
+        flex-basis: 100%;
+      }
+
+      .add-button {
+        min-height: 44px;
+        flex: 1;
+      }
+
+      .quote-text {
+        min-height: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Welcome screen for first-time visitors -->
+  <section class="welcome-screen" id="welcomeScreen" aria-labelledby="welcomeTitle">
+    <div class="welcome-card">
+      <div class="brand-mark" aria-hidden="true">🌱</div>
+      <p class="eyebrow">A little space just for you</p>
+      <h1 id="welcomeTitle">Little by Little</h1>
+      <p class="tagline">Small steps. Beautiful progress.<br />You don't have to do it all today.</p>
+
+      <form id="nameForm">
+        <label for="nameInput">What should we call you?</label>
+        <input
+          class="text-input"
+          id="nameInput"
+          name="name"
+          type="text"
+          maxlength="40"
+          placeholder="Your lovely name..."
+          autocomplete="given-name"
+          required
+        />
+        <button class="primary-button" type="submit">Let's grow together ✿</button>
+      </form>
+
+      <p class="welcome-note">No pressure, no perfect days. Just you, doing your best. ♡</p>
+    </div>
+  </section>
+
+  <!-- Main dashboard, shown after the visitor enters their name -->
+  <main class="dashboard hidden" id="dashboard">
+    <header class="topbar">
+      <div class="brand" aria-label="Little by Little home">
+        <div class="brand-icon" aria-hidden="true">🌱</div>
+        <div>
+          <div class="brand-name">little by little</div>
+          <span class="brand-subtitle">Small steps. Beautiful progress.</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="date-pill" id="todayDate"></div>
+        <button class="soft-button" id="changeNameButton" type="button" title="Change your display name">
+          ♡ <span id="displayName"></span>
+        </button>
+      </div>
+    </header>
+
+    <section class="hero" aria-labelledby="greeting">
+      <div class="hero-copy">
+        <p class="eyebrow" id="heroEyebrow">A new day, a fresh start</p>
+        <h1 id="greeting">Hello, lovely human ♡</h1>
+        <p>You don't have to do it all. Just a little at a time.</p>
+      </div>
+      <div class="hero-illustration" aria-hidden="true">🌷</div>
+    </section>
+
+    
+<section class="panel" id="assessmentIntro" aria-labelledby="assessmentTitle" style="margin-bottom: 24px;">
+  <p class="eyebrow">Get to know your habits 🌱</p>
+  <h2 id="assessmentTitle">What's making it hard to start?</h2>
+  <p class="panel-description">
+    Take this little quiz to understand your procrastination patterns
+    and discover small steps that work for you.
+  </p>
+  <p>✨ 6 quick questions · About 2 minutes · No judgment</p>
+  <button class="primary-button" id="startAssessmentButton" type="button">
+    Discover my starting style ♡
+  </button>
+</section>
+
+<section class="panel" id="assessmentQuiz" aria-labelledby="quizTitle" hidden>
+  <p class="eyebrow">Your personal starting guide 🌱</p>
+  <h2 id="quizTitle">Let's understand your starting style</h2>
+  <p id="quizProgress">Question 1 of 6</p>
+
+  <div id="quizQuestionArea">
+    <h3 id="quizQuestionText"></h3>
+    <div id="quizAnswers"></div>
+  </div>
+
+  <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
+    <button class="secondary-button" id="quizBackButton" type="button">
+      Back
+    </button>
+    <button class="primary-button" id="quizNextButton" type="button">
+      Next question →
+    </button>
+  </div>
+
+  <p id="quizFeedback" aria-live="polite"></p>
+</section>
+
+<section class="panel" id="assessmentResults" aria-labelledby="resultsTitle" hidden>
+  <p class="eyebrow">A little more understanding, a little more growth 🌷</p>
+  <h2 id="resultsTitle">Your starting-style results</h2>
+  <div id="assessmentResultsContent"></div>
+  <button class="primary-button" id="assessmentRetryButton" type="button">
+    Retake the quiz ♡
+  </button>
+</section>
+
+    <div class="dashboard-grid">
+      <!-- Main work area -->
+      <div class="main-column">
+        <section class="panel" aria-labelledby="tasksTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Your gentle game plan</p>
+              <h2 id="tasksTitle">Today's little steps ✨</h2>
+              <p class="panel-description">Every tiny task counts. Start with just one.</p>
+            </div>
+            <span class="tiny-badge" id="taskCountBadge">0 done</span>
+          </div>
+
+          <form class="task-form" id="taskForm">
+            <input
+              class="text-input"
+              id="taskInput"
+              type="text"
+              maxlength="180"
+              placeholder="What's one thing you'd like to do?"
+              aria-label="New task"
+              required
+            />
+            <button class="add-button" type="submit">+ Add a step</button>
+          </form>
+
+          <ul class="task-list" id="taskList" aria-label="Your tasks"></ul>
+
+          <div class="task-footer">
+            <span id="taskSummary">A little progress is still progress.</span>
+            <button class="text-button" id="clearCompletedButton" type="button">Clear completed</button>
+          </div>
+        </section>
+
+
+<section class="panel" id="startLoop" aria-labelledby="startLoopTitle">
+
+    <h2 id="startLoopTitle">Let's start, little by little 🌱</h2>
+
+<label for="barrierSelect">What's making it hard to start today?</label>
+<select id="barrierSelect" class="text-input">
+  <option value="">Choose what feels difficult...</option>
+  <option value="overwhelm">I have too much to do</option>
+  <option value="fear">I'm afraid of getting it wrong</option>
+  <option value="confidence">I don't feel confident</option>
+  <option value="distraction">I keep getting distracted</option>
+  <option value="emotion">I'm feeling stressed or anxious</option>
+</select>
+
+  <div style="margin-top: 16px;">
+    <p class="focus-label">✨ Your suggested tiny step</p>
+    <p id="tinyStepText" aria-live="polite">
+      Choose an option above to find a small starting point.
+    </p>
+  </div>
+
+  <button class="primary-button" id="startLoopButton" type="button">
+    Help me get started ♡
+  </button>
+
+  
+<div class="focus-card" id="timerCard" style="margin-top: 18px;">
+  <p class="focus-label">⏱️ Your little focus session</p>
+
+  <label for="timerMinutes">How many minutes would you like to focus?</label>
+  <select id="timerMinutes" class="text-input">
+    <option value="1">1 minute</option>
+    <option value="5" selected>5 minutes</option>
+    <option value="10">10 minutes</option>
+    <option value="15">15 minutes</option>
+    <option value="20">20 minutes</option>
+    <option value="25">25 minutes</option>
+    <option value="30">30 minutes</option>
+    <option value="45">45 minutes</option>
+    <option value="60">60 minutes</option>
+  </select>
+
+  <p id="timerDisplay" style="font-size: 2.5rem; font-weight: 700;">
+    05:00
+  </p>
+
+  <button class="primary-button" id="timerStartButton" type="button">
+    Start focus 🌱
+  </button>
+
+  <button class="secondary-button" id="timerPauseButton" type="button">
+    Pause
+  </button>
+
+  <button class="secondary-button" id="timerResetButton" type="button">
+    Reset timer
+  </button>
+
+  <p id="timerFeedback" aria-live="polite"></p>
+</div>
+
+  <p id="startLoopFeedback" aria-live="polite"
+     style="margin: 14px 0 0; color: var(--muted);">
+  </p>
+</section>
+
+        <section class="panel" aria-labelledby="focusTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">One thing at a time</p>
+              <h2 id="focusTitle">Your soft focus corner ☁️</h2>
+              <p class="panel-description">What matters most right now? Keep it small.</p>
+            </div>
+          </div>
+
+          <div class="focus-card">
+            <label class="focus-label" for="focusInput">🌼 My one little priority</label>
+            <textarea id="focusInput" maxlength="500" placeholder="For the next 15 minutes, I will..."></textarea>
+            <div class="save-row">
+              <span class="save-status" id="focusStatus" aria-live="polite">Saved on this device when you save.</span>
+              <button class="save-button" id="saveFocusButton" type="button">Save my focus</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="notesTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">A place to let it out</p>
+              <h2 id="notesTitle">Little thoughts & notes 📝</h2>
+              <p class="panel-description">Brain dump, reminders, ideas — anything on your mind.</p>
+            </div>
+          </div>
+
+          <textarea class="notes-textarea" id="notesInput" maxlength="5000" placeholder="Let your thoughts land here..."></textarea>
+          <div class="save-row">
+            <span class="save-status" id="notesStatus" aria-live="polite">Your thoughts can take up space here.</span>
+            <button class="save-button" id="saveNotesButton" type="button">Save my notes</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar: motivation, progress, and self-care -->
+      <aside class="sidebar" aria-label="Encouragement and self-care">
+        <section class="panel quote-panel" aria-labelledby="quoteHeading">
+          <p class="eyebrow" id="quoteHeading">A little note for your heart</p>
+          <div class="quote-symbol" aria-hidden="true">“</div>
+          <blockquote class="quote-text" id="quoteText">You are allowed to be a work in progress and still be proud of yourself.</blockquote>
+          <div class="quote-bottom">
+            <span class="quote-count" id="quoteCount">A gentle reminder · 1/8</span>
+            <button class="quote-next" id="nextQuoteButton" type="button" aria-label="Show another quote" title="Another little reminder">↻</button>
+          </div>
+        </section>
+
+        <section class="panel garden-panel" aria-labelledby="gardenTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Look how far you've come</p>
+              <h2 id="gardenTitle">Your tiny garden 🌿</h2>
+            </div>
+          </div>
+
+          <div class="garden-stage" aria-live="polite">
+            <div>
+              <div class="garden-plant" id="gardenPlant" aria-hidden="true">🌱</div>
+              <p class="garden-caption" id="gardenCaption">Your garden is waiting for its first little win.</p>
+            </div>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Today's task completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-meta">
+            <span id="progressText">0 of 0 little steps done</span>
+            <span id="progressPercent">0%</span>
+          </div>
+        </section>
+
+        <section class="panel reminder-panel" aria-labelledby="remindersTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">A tiny self-care check-in</p>
+              <h2 id="remindersTitle">You matter, too ♡</h2>
+              <p class="panel-description">Your well-being is part of the plan.</p>
+            </div>
+          </div>
+
+          <div class="reminder-list">
+            <div class="reminder-item">
+              <div class="reminder-emoji" aria-hidden="true">💧</div>
+              <div>
+                <strong>Have a sip of water</strong>
+                <p>Keep some water nearby and take a sip when you can.</p>
+              </div>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-emoji" aria-hidden="true">🪴</div>
+              <div>
+                <strong>Give your mind a break</strong>
+                <p>Stretch, look away from your screen, or take a few slow breaths.</p>
+              </div>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-emoji" aria-hidden="true">🌙</div>
+              <div>
+                <strong>Rest is productive, too</strong>
+                <p>Protect your sleep, especially when deadlines feel big.</p>
+              </div>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-emoji" aria-hidden="true">🌼</div>
+              <div>
+                <strong>One thing at a time</strong>
+                <p>Pick one small next step. You don't have to solve everything at once.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="reminder-controls">
+            <label for="reminderFrequency">Gentle pop-up</label>
+            <select id="reminderFrequency">
+              <option value="0">Off for now</option>
+              <option value="30">Every 30 minutes</option>
+              <option value="60">Every hour</option>
+              <option value="120">Every 2 hours</option>
+            </select>
+          </div>
+          <p class="panel-description" style="margin-top: 12px;">Reminders only appear while this page is open. Choose what feels right for you.</p>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      Made with a little love <span>♡</span> Remember: slow growth is still growth.
+    </footer>
+  </main>
+
+  <!-- A dismissible, gentle reminder toast -->
+  <div class="toast hidden" id="reminderToast" role="status" aria-live="polite">
+    <div class="toast-icon" id="toastIcon" aria-hidden="true">💧</div>
+    <div>
+      <strong id="toastTitle">A little pause?</strong>
+      <p id="toastMessage">Take a sip of water and relax your shoulders.</p>
+    </div>
+    <button class="toast-close" id="closeToastButton" type="button" aria-label="Dismiss reminder">×</button>
+  </div>
+
+  <script>
+    /* ---------- Storage helpers ---------- */
+    // All saved data stays in this browser on this device.
+    // localStorage is convenient, but it is not an account or a secure login system.
+    const STORAGE_KEYS = {
+      name: "littleByLittle.name",
+      tasks: "littleByLittle.tasks",
+      focus: "littleByLittle.focus",
+      notes: "littleByLittle.notes",
+      reminderFrequency: "littleByLittle.reminderFrequency"
+    };
+
+    function readStorage(key, fallback) {
+      try {
+        const value = localStorage.getItem(key);
+        return value === null ? fallback : value;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function writeStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function readJSON(key, fallback) {
+      try {
+        const value = readStorage(key, null);
+        return value === null ? fallback : JSON.parse(value);
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    /* ---------- Elements ---------- */
+    const welcomeScreen = document.getElementById("welcomeScreen");
+    const dashboard = document.getElementById("dashboard");
+    const nameForm = document.getElementById("nameForm");
+    const nameInput = document.getElementById("nameInput");
+    const greeting = document.getElementById("greeting");
+    const displayName = document.getElementById("displayName");
+    const todayDate = document.getElementById("todayDate");
+
+    const taskForm = document.getElementById("taskForm");
+    const taskInput = document.getElementById("taskInput");
+    const taskList = document.getElementById("taskList");
+    const taskCountBadge = document.getElementById("taskCountBadge");
+    const taskSummary = document.getElementById("taskSummary");
+    const clearCompletedButton = document.getElementById("clearCompletedButton");
+
+    const focusInput = document.getElementById("focusInput");
+    const focusStatus = document.getElementById("focusStatus");
+    const notesInput = document.getElementById("notesInput");
+    const notesStatus = document.getElementById("notesStatus");
+
+    const gardenPlant = document.getElementById("gardenPlant");
+    const gardenCaption = document.getElementById("gardenCaption");
+    const progressFill = document.getElementById("progressFill");
+    const progressTrack = document.getElementById("progressTrack");
+    const progressText = document.getElementById("progressText");
+    const progressPercent = document.getElementById("progressPercent");
+
+    const quoteText = document.getElementById("quoteText");
+    const quoteCount = document.getElementById("quoteCount");
+    const reminderFrequency = document.getElementById("reminderFrequency");
+    const reminderToast = document.getElementById("reminderToast");
+    const toastIcon = document.getElementById("toastIcon");
+    const toastTitle = document.getElementById("toastTitle");
+    const toastMessage = document.getElementById("toastMessage");
+    
+/* ---------- Little by Little: procrastination self-reflection quiz ---------- */
+const assessmentIntro = document.getElementById("assessmentIntro");
+const assessmentQuiz = document.getElementById("assessmentQuiz");
+const assessmentResults = document.getElementById("assessmentResults");
+const startAssessmentButton = document.getElementById("startAssessmentButton");
+const quizProgress = document.getElementById("quizProgress");
+const quizQuestionText = document.getElementById("quizQuestionText");
+const quizAnswers = document.getElementById("quizAnswers");
+const quizBackButton = document.getElementById("quizBackButton");
+const quizNextButton = document.getElementById("quizNextButton");
+const quizFeedback = document.getElementById("quizFeedback");
+const assessmentResultsContent = document.getElementById("assessmentResultsContent");
+const assessmentRetryButton = document.getElementById("assessmentRetryButton");
+
+const assessmentQuestions = [
+  {
+    dimension: "initiation",
+    question: "When you have something important to do, how often is it hard to begin?",
+    options: [
+      "Almost never",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ]
+  },
+  {
+    dimension: "overwhelm",
+    question: "How often does a task feel so big that you don't know where to start?",
+    options: [
+      "Almost never",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ]
+  },
+  {
+    dimension: "fear",
+    question: "How often do you delay because you're worried about making mistakes or not doing well?",
+    options: [
+      "Almost never",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ]
+  },
+  {
+    dimension: "confidence",
+    question: "How often do you put something off because you doubt you can do it?",
+    options: [
+      "Almost never",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ]
+  },
+  {
+    dimension: "distraction",
+    question: "How often do distractions pull you away when you're trying to work?",
+    options: [
+      "Almost never",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ]
+  },
+  {
+    dimension: "emotion",
+    question: "How often do stress, worry, or uncomfortable feelings make you delay a task?",
+    options: [
+      "Almost never",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ]
+  }
+];
+
+const dimensionNames = {
+  initiation: "Getting started",
+  overwhelm: "Feeling overwhelmed",
+  fear: "Fear of mistakes or perfectionism",
+  confidence: "Confidence",
+  distraction: "Distractions",
+  emotion: "Stress and emotions"
+};
+
+let assessmentCurrentQuestion = 0;
+let assessmentAnswers = Array(assessmentQuestions.length).fill(null);
+
+function renderAssessmentQuestion() {
+  const question = assessmentQuestions[assessmentCurrentQuestion];
+
+  quizProgress.textContent =
+    `Question ${assessmentCurrentQuestion + 1} of ${assessmentQuestions.length}`;
+  quizQuestionText.textContent = question.question;
+  quizAnswers.replaceChildren();
+  quizFeedback.textContent = "";
+  quizBackButton.hidden = assessmentCurrentQuestion === 0;
+  quizNextButton.textContent =
+    assessmentCurrentQuestion === assessmentQuestions.length - 1
+      ? "See my results ♡"
+      : "Next question →";
+
+  question.options.forEach(function (option, index) {
+    const label = document.createElement("label");
+    label.className = "assessment-answer";
+    label.style.display = "block";
+    label.style.padding = "12px";
+    label.style.marginTop = "10px";
+    label.style.border = "1px solid var(--border)";
+    label.style.borderRadius = "12px";
+    label.style.cursor = "pointer";
+
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "assessmentAnswer";
+    radio.value = String(index);
+    radio.checked = assessmentAnswers[assessmentCurrentQuestion] === index;
+    radio.style.marginRight = "10px";
+
+    label.append(radio, document.createTextNode(option));
+    quizAnswers.appendChild(label);
+  });
+}
+
+function showAssessmentResults() {
+  const scores = {};
+
+  assessmentQuestions.forEach(function (question, index) {
+    scores[question.dimension] = assessmentAnswers[index];
+  });
+
+  const totalScore = assessmentAnswers.reduce(function (sum, answer) {
+    return sum + answer;
+  }, 0);
+
+  let level;
+  let levelMessage;
+
+ if (totalScore <= 5) {
+  level = "A few barriers showed up";
+  levelMessage =
+    "Your answers suggest these barriers may be less frequent right now. You can still use small-step strategies whenever you need them.";
+} else if (totalScore <= 11) {
+  level = "Some barriers showed up";
+  levelMessage =
+    "Your answers suggest some of these barriers may come up sometimes. A manageable first step and a little structure may help.";
+} else {
+  level = "Several barriers showed up often";
+  levelMessage =
+    "Your answers suggest several barriers may be showing up often right now. Be kind to yourself, and focus on just one small action at a time.";
+}
+
+  let dominantDimension = assessmentQuestions[0].dimension;
+
+  assessmentQuestions.forEach(function (question) {
+    if (scores[question.dimension] > scores[dominantDimension]) {
+      dominantDimension = question.dimension;
+    }
+  });
+
+const recommendations = {
+  initiation: "Use a two-minute start: open the document, gather one item, or write one heading.",
+  overwhelm: "Break the task into a few tiny actions. Choose only the first action for now.",
+  fear: "Try a deliberately rough first draft. Your first attempt is allowed to be imperfect.",
+  confidence: "Choose the easiest part and build confidence by completing one small action.",
+  distraction: "Put one distraction out of reach and keep only the materials for your current task nearby.",
+  emotion: "Pause for three slow breaths, name how you feel without judging it, then choose a gentler first step."
+};
+
+const recommendationText = recommendations[dominantDimension];
+
+  const barrierMapping = {
+    initiation: "overwhelm",
+    overwhelm: "overwhelm",
+    fear: "fear",
+    confidence: "confidence",
+    distraction: "distraction",
+    emotion: "emotion"
+  };
+
+  if (barrierSelect) {
+    barrierSelect.value = barrierMapping[dominantDimension] || "";
+    barrierSelect.dispatchEvent(new Event("change"));
+  }
+
+  assessmentResultsContent.replaceChildren();
+
+  const scoreHeading = document.createElement("h3");
+  scoreHeading.textContent = level;
+
+  const scoreText = document.createElement("p");
+  scoreText.textContent = `Your reflection score: ${totalScore} out of 18.`;
+
+  const note = document.createElement("p");
+  note.textContent = levelMessage;
+
+  const barrierHeading = document.createElement("h3");
+  barrierHeading.textContent = `A pattern to explore: ${dimensionNames[dominantDimension]}`;
+
+  const recommendation = document.createElement("p");
+  recommendation.textContent = recommendations[dominantDimension];
+
+  const caveat = document.createElement("p");
+  caveat.textContent = "This is a brief self-reflection tool, not a diagnosis. Your answers describe how things feel right now and can change over time.";
+
+  assessmentResultsContent.append(
+    scoreHeading,
+    scoreText,
+    note,
+    barrierHeading,
+    recommendation,
+    caveat
+  );
+  tinyStepText.textContent = recommendationText;
+
+  assessmentQuiz.hidden = true;
+  assessmentResults.hidden = false;
+}
+
+startAssessmentButton.addEventListener("click", function () {
+  assessmentCurrentQuestion = 0;
+  assessmentAnswers = Array(assessmentQuestions.length).fill(null);
+  assessmentIntro.hidden = true;
+  assessmentResults.hidden = true;
+  assessmentQuiz.hidden = false;
+  renderAssessmentQuestion();
+  assessmentQuiz.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+quizBackButton.addEventListener("click", function () {
+  if (assessmentCurrentQuestion > 0) {
+    assessmentCurrentQuestion--;
+    renderAssessmentQuestion();
+  }
+});
+
+quizNextButton.addEventListener("click", function () {
+  const selected = quizAnswers.querySelector('input[name="assessmentAnswer"]:checked');
+
+  if (selected) {
+    assessmentAnswers[assessmentCurrentQuestion] = Number(selected.value);
+  }
+
+  if (assessmentAnswers[assessmentCurrentQuestion] === null) {
+    quizFeedback.textContent = "Choose the answer that feels closest to your experience. ♡";
+    return;
+  }
+
+  if (assessmentCurrentQuestion < assessmentQuestions.length - 1) {
+    assessmentCurrentQuestion++;
+    renderAssessmentQuestion();
+  } else {
+    showAssessmentResults();
+    assessmentResults.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+assessmentRetryButton.addEventListener("click", function () {
+  assessmentResults.hidden = true;
+  assessmentIntro.hidden = false;
+  assessmentQuiz.hidden = true;
+  assessmentIntro.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+const barrierSelect = document.getElementById("barrierSelect");
+const tinyStepText = document.getElementById("tinyStepText");
+const startLoopButton = document.getElementById("startLoopButton");
+const startLoopFeedback = document.getElementById("startLoopFeedback");
+
+const tinySteps = {
+  overwhelm: {
+    suggestion: "Choose just one small part of your task.",
+    action: "Spend five minutes on the very first step."
+  },
+  fear: {
+    suggestion: "Make a rough first attempt. It doesn't need to be perfect.",
+    action: "Write one imperfect sentence or make one rough attempt."
+  },
+  confidence: {
+    suggestion: "Start with the easiest part to build momentum.",
+    action: "Work on one easy part for five minutes."
+  },
+  distraction: {
+    suggestion: "Put one distraction out of reach and focus on one thing.",
+    action: "Silence one distraction and focus on your task for five minutes."
+  },
+  emotion: {
+    suggestion: "Take a gentle breath and make the next step smaller.",
+    action: "Pause, take three slow breaths, then try one tiny task step."
+  }
+};
+
+barrierSelect.addEventListener("change", function () {
+  const choice = tinySteps[barrierSelect.value];
+
+  startLoopFeedback.textContent = "";
+
+  if (!choice) {
+    tinyStepText.textContent =
+      "Choose an option above to find a small starting point.";
+    return;
+  }
+
+  tinyStepText.textContent = choice.suggestion;
+});
+
+startLoopButton.addEventListener("click", function () {
+  const choice = tinySteps[barrierSelect.value];
+
+  if (!choice) {
+    startLoopFeedback.textContent =
+      "Choose what feels difficult first, and we'll find a tiny step together.";
+    return;
+  }
+
+  tinyStepText.textContent = choice.suggestion;
+
+  startLoopFeedback.textContent =
+    "Your next little step: " + choice.action +
+    " 🌱 You don't have to finish everything right now.";
+});
+
+
+/* ---------- Customizable focus timer ---------- */
+const timerDisplay = document.getElementById("timerDisplay");
+const timerStartButton = document.getElementById("timerStartButton");
+const timerPauseButton = document.getElementById("timerPauseButton");
+const timerResetButton = document.getElementById("timerResetButton");
+const timerFeedback = document.getElementById("timerFeedback");
+const timerMinutesSelect = document.getElementById("timerMinutes");
+
+let timerRemaining = 5 * 60;
+let timerInterval = null;
+let timerPaused = false;
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(timerRemaining / 60);
+  const seconds = timerRemaining % 60;
+
+  timerDisplay.textContent =
+    String(minutes).padStart(2, "0") + ":" +
+    String(seconds).padStart(2, "0");
+}
+
+function stopTimerInterval() {
+  if (timerInterval !== null) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function resetTimerToSelectedDuration() {
+  stopTimerInterval();
+  timerPaused = false;
+  timerRemaining = Number(timerMinutesSelect.value || 5) * 60;
+  timerPauseButton.textContent = "Pause";
+  updateTimerDisplay();
+}
+
+function finishTimer() {
+  stopTimerInterval();
+  timerPaused = false;
+  timerPauseButton.textContent = "Pause";
+  timerFeedback.textContent =
+    "Focus session complete! Celebrate showing up for yourself. ♡🌱";
+}
+
+function runTimer() {
+  stopTimerInterval();
+
+  timerInterval = setInterval(function () {
+    timerRemaining--;
+    updateTimerDisplay();
+
+    if (timerRemaining <= 0) {
+      timerRemaining = 0;
+      updateTimerDisplay();
+      finishTimer();
+    }
+  }, 1000);
+}
+
+timerMinutesSelect.addEventListener("change", function () {
+  resetTimerToSelectedDuration();
+  timerFeedback.textContent =
+    "Your focus session is set. Ready when you are! 🌱";
+});
+
+timerStartButton.addEventListener("click", function () {
+  if (timerInterval !== null) return;
+
+  if (timerRemaining <= 0) {
+    resetTimerToSelectedDuration();
+  }
+
+  timerPaused = false;
+  timerPauseButton.textContent = "Pause";
+  timerFeedback.textContent =
+    "You're doing it! One little step at a time. ♡";
+
+  runTimer();
+});
+
+timerPauseButton.addEventListener("click", function () {
+  if (timerInterval !== null) {
+    stopTimerInterval();
+    timerPaused = true;
+    timerPauseButton.textContent = "Resume";
+    timerFeedback.textContent =
+      "Paused. Take your time; resume whenever you're ready. ♡";
+  } else if (timerPaused && timerRemaining > 0) {
+    timerPaused = false;
+    timerPauseButton.textContent = "Pause";
+    timerFeedback.textContent =
+      "Welcome back! Let's continue your little step. 🌱";
+
+    runTimer();
+  }
+});
+
+timerResetButton.addEventListener("click", function () {
+  resetTimerToSelectedDuration();
+  timerFeedback.textContent =
+    "Timer reset. A fresh start whenever you're ready! 🌱";
+});
+
+resetTimerToSelectedDuration();
+
+    /* ---------- Visitor name and welcome ---------- */
+    function showDashboard(name) {
+      const safeName = (name || "").trim().slice(0, 40);
+      if (!safeName) {
+        nameInput.focus();
+        return;
+      }
+
+      writeStorage(STORAGE_KEYS.name, safeName);
+      greeting.textContent = `Hello, ${safeName} ♡`;
+      displayName.textContent = safeName;
+      welcomeScreen.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+      renderTasks();
+      updateGarden();
+      updateDate();
+    }
+
+    nameForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      showDashboard(nameInput.value);
+    });
+
+    document.getElementById("changeNameButton").addEventListener("click", function () {
+      const currentName = readStorage(STORAGE_KEYS.name, "");
+      nameInput.value = currentName;
+      dashboard.classList.add("hidden");
+      welcomeScreen.classList.remove("hidden");
+      nameInput.focus();
+    });
+
+    /* ---------- Friendly date display ---------- */
+    function updateDate() {
+      const now = new Date();
+      todayDate.textContent = now.toLocaleDateString(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric"
+      });
+    }
+
+    /* ---------- Task list: add, complete, delete, save ---------- */
+    let tasks = readJSON(STORAGE_KEYS.tasks, []);
+    if (!Array.isArray(tasks)) tasks = [];
+
+    function saveTasks() {
+      writeStorage(STORAGE_KEYS.tasks, JSON.stringify(tasks));
+    }
+
+    function renderTasks() {
+      taskList.replaceChildren();
+
+      if (tasks.length === 0) {
+        const empty = document.createElement("li");
+        empty.className = "empty-state";
+
+        const flower = document.createElement("span");
+        flower.textContent = "🌷";
+        flower.setAttribute("aria-hidden", "true");
+
+        const message = document.createElement("div");
+        message.textContent = "Your list is a blank page. Add one tiny step when you're ready.";
+
+        empty.append(flower, message);
+        taskList.appendChild(empty);
+      } else {
+        tasks.forEach(function (task) {
+          const item = document.createElement("li");
+          item.className = "task-item" + (task.completed ? " completed" : "");
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.className = "task-check";
+          checkbox.checked = Boolean(task.completed);
+          checkbox.setAttribute("aria-label", `Mark ${task.text} as complete`);
+
+          checkbox.addEventListener("change", function () {
+            task.completed = checkbox.checked;
+            saveTasks();
+            renderTasks();
+            updateGarden();
+          });
+
+          const text = document.createElement("span");
+          text.className = "task-text";
+          text.textContent = task.text;
+
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.className = "delete-task";
+          deleteButton.textContent = "×";
+          deleteButton.setAttribute("aria-label", `Delete task: ${task.text}`);
+
+          deleteButton.addEventListener("click", function () {
+            tasks = tasks.filter(function (entry) {
+              return entry.id !== task.id;
+            });
+            saveTasks();
+            renderTasks();
+            updateGarden();
+          });
+
+          item.append(checkbox, text, deleteButton);
+          taskList.appendChild(item);
+        });
+      }
+
+      const done = tasks.filter(task => task.completed).length;
+      taskCountBadge.textContent = `${done} done`;
+      taskSummary.textContent = tasks.length === 0
+        ? "A little progress is still progress."
+        : `${tasks.length - done} little step${tasks.length - done === 1 ? "" : "s"} left to grow.`;
+
+      clearCompletedButton.disabled = done === 0;
+      updateGarden();
+    }
+
+    taskForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const text = taskInput.value.trim();
+      if (!text) return;
+
+      tasks.push({
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        text: text,
+        completed: false
+      });
+
+      saveTasks();
+      taskInput.value = "";
+      renderTasks();
+      taskInput.focus();
+    });
+
+    clearCompletedButton.addEventListener("click", function () {
+      tasks = tasks.filter(task => !task.completed);
+      saveTasks();
+      renderTasks();
+    });
+
+    /* ---------- Tiny digital garden grows with completed tasks ---------- */
+    function updateGarden() {
+      const total = tasks.length;
+      const done = tasks.filter(task => task.completed).length;
+      const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+      progressFill.style.width = `${percent}%`;
+      progressTrack.setAttribute("aria-valuenow", String(percent));
+      progressText.textContent = `${done} of ${total} little step${total === 1 ? "" : "s"} done`;
+      progressPercent.textContent = `${percent}%`;
+
+      if (done === 0) {
+        gardenPlant.textContent = "🌱";
+        gardenCaption.textContent = total === 0
+          ? "Your garden is waiting for its first little win."
+          : "Every garden starts with a seed. You've got this.";
+      } else if (done < 3) {
+        gardenPlant.textContent = "🌿";
+        gardenCaption.textContent = "Look at you — your little garden is growing!";
+      } else if (done < 6) {
+        gardenPlant.textContent = "🌷";
+        gardenCaption.textContent = "A few small steps, a lovely little bloom.";
+      } else {
+        gardenPlant.textContent = "🌻";
+        gardenCaption.textContent = "So many little wins. Look how you've grown!";
+      }
+    }
+
+    /* ---------- Focus and notes are saved on this device ---------- */
+    focusInput.value = readStorage(STORAGE_KEYS.focus, "");
+    notesInput.value = readStorage(STORAGE_KEYS.notes, "");
+
+    document.getElementById("saveFocusButton").addEventListener("click", function () {
+      const saved = writeStorage(STORAGE_KEYS.focus, focusInput.value);
+      focusStatus.textContent = saved ? "Your little priority is saved ♡" : "Couldn't save on this device.";
+    });
+
+    document.getElementById("saveNotesButton").addEventListener("click", function () {
+      const saved = writeStorage(STORAGE_KEYS.notes, notesInput.value);
+      notesStatus.textContent = saved ? "Your thoughts are tucked away ♡" : "Couldn't save on this device.";
+    });
+
+    /* ---------- Rotating motivational quotes ---------- */
+    const quotes = [
+      "You are allowed to be a work in progress and still be proud of yourself.",
+      "Small steps every day add up to lovely things.",
+      "You don't need to feel ready. You can begin gently.",
+      "Rest is not a reward. It's part of taking care of yourself.",
+      "Done with care is better than perfect someday.",
+      "You can do hard things in small pieces.",
+      "Your pace is allowed to look different from everyone else's.",
+      "Begin where you are. Use what you have. Do one small thing."
+    ];
+
+    let quoteIndex = 0;
+
+    function showQuote(index) {
+      quoteIndex = (index + quotes.length) % quotes.length;
+      quoteText.textContent = quotes[quoteIndex];
+      quoteCount.textContent = `A gentle reminder · ${quoteIndex + 1}/${quotes.length}`;
+    }
+
+    document.getElementById("nextQuoteButton").addEventListener("click", function () {
+      showQuote(quoteIndex + 1);
+    });
+
+    /* ---------- Gentle reminder pop-ups ---------- */
+    const reminders = [
+      {
+        icon: "💧",
+        title: "A little hydration break?",
+        message: "Take a sip of water and let your shoulders soften."
+      },
+      {
+        icon: "🌿",
+        title: "Unclench your shoulders",
+        message: "Look away from the screen for a moment and take one slow breath."
+      },
+      {
+        icon: "🌼",
+        title: "Tiny steps count",
+        message: "What's the smallest next step you could take? Just that is enough."
+      },
+      {
+        icon: "🌙",
+        title: "A gentle note about rest",
+        message: "Your body and brain need sleep, even during busy weeks. Be kind to tomorrow-you."
+      },
+      {
+        icon: "☁️",
+        title: "Pause for a moment",
+        message: "Stand up, stretch gently, or give your eyes a screen break."
+      }
+    ];
+
+    let reminderTimer = null;
+    let reminderIndex = 0;
+    let toastTimer = null;
+
+    function hideToast() {
+      reminderToast.classList.add("hidden");
+      if (toastTimer) {
+        clearTimeout(toastTimer);
+        toastTimer = null;
+      }
+    }
+
+    function showReminder() {
+      const reminder = reminders[reminderIndex % reminders.length];
+      reminderIndex += 1;
+
+      toastIcon.textContent = reminder.icon;
+      toastTitle.textContent = reminder.title;
+      toastMessage.textContent = reminder.message;
+      reminderToast.classList.remove("hidden");
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(hideToast, 10000);
+    }
+
+    function setReminderFrequency(minutes) {
+      if (reminderTimer) {
+        clearInterval(reminderTimer);
+        reminderTimer = null;
+      }
+
+      hideToast();
+
+      const saved = writeStorage(STORAGE_KEYS.reminderFrequency, String(minutes));
+      if (!saved) {
+        // Reminders still work for this visit even if storage is unavailable.
+      }
+
+      if (minutes > 0) {
+        reminderTimer = setInterval(showReminder, minutes * 60 * 1000);
+      }
+    }
+
+    reminderFrequency.value = readStorage(STORAGE_KEYS.reminderFrequency, "0");
+    reminderFrequency.addEventListener("change", function () {
+      setReminderFrequency(Number(reminderFrequency.value));
+    });
+
+    document.getElementById("closeToastButton").addEventListener("click", hideToast);
+
+    /* ---------- Start-up: greet returning visitors ---------- */
+    const savedName = readStorage(STORAGE_KEYS.name, "").trim();
+
+    if (savedName) {
+      showDashboard(savedName);
+    } else {
+      welcomeScreen.classList.remove("hidden");
+      dashboard.classList.add("hidden");
+      nameInput.focus();
+    }
+
+    // Restore the saved reminder preference without showing an immediate pop-up.
+    setReminderFrequency(Number(reminderFrequency.value) || 0);
+  </script>
+</body>
+</html>

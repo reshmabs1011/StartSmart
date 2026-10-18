@@ -1,41 +1,163 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Home{% endblock %}
 {% block content %}
 <div class="page-heading">
-  <div><span class="eyebrow">YOUR SPACE</span><h1>Welcome back.</h1><p class="lead small-lead">Progress isn't about doing everything. It's about choosing the next step.</p></div>
-  <a class="button primary" href="{{ url_for('new_task') }}">＋ Add a task</a>
+  <div>
+    <span class="eyebrow">YOUR SPACE</span>
+    <h1>Let's make today a little easier.</h1>
+    <p class="lead small-lead">You don't have to do it all today. Let's find one good place to start.</p>
+  </div>
+  <a class="button primary" href="{{ url_for('new_task') }}">Add a task</a>
 </div>
-<section class="stats-grid">
-  <article class="stat-card"><span class="stat-label">Tasks created</span><strong>{{ total }}</strong><span class="stat-foot">Your work, organized</span></article>
-  <article class="stat-card"><span class="stat-label">Tasks completed</span><strong>{{ completed }}</strong><span class="stat-foot">Every finish counts</span></article>
-  <article class="stat-card"><span class="stat-label">Still in progress</span><strong>{{ pending_count }}</strong><span class="stat-foot">One step at a time</span></article>
-  <article class="stat-card"><span class="stat-label">Focus logs</span><strong>{{ focus_count }}</strong><span class="stat-foot">Sessions you recorded</span></article>
+
+<section class="first-step-card" aria-labelledby="first-step-title">
+  {% if first_step %}
+    <div class="first-step-copy">
+      <span class="eyebrow">FIRST STEP</span>
+      <h2 id="first-step-title">{{ first_step.title }}</h2>
+      <p>A realistic place to begin from the work you already saved.</p>
+      <div class="chip-row">
+        {% if first_step.due_date %}
+          {% if first_step.due_date < today %}
+            <span class="chip chip-peach">Overdue · {{ first_step.due_date.strftime('%b %d, %Y') }}</span>
+          {% elif first_step.due_date == today %}
+            <span class="chip chip-yellow">Due today</span>
+          {% else %}
+            <span class="chip chip-lavender">Due {{ first_step.due_date.strftime('%b %d, %Y') }}</span>
+          {% endif %}
+        {% else %}
+          <span class="chip">No due date</span>
+        {% endif %}
+        <span class="chip chip-mint">{{ first_step.status }}</span>
+        {% if next_action %}
+          <span class="chip chip-blush">Next: {{ next_action.title }}</span>
+        {% endif %}
+      </div>
+      <div class="hero-actions">
+        <a class="button primary" href="{{ url_for('task_detail', task_id=first_step.id) }}">Open this task</a>
+        <form method="post" action="{{ url_for('complete_task', task_id=first_step.id) }}">
+          <button class="button secondary" type="submit">Mark complete</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <div class="first-step-copy empty-state">
+      <span class="eyebrow">FIRST STEP</span>
+      <h2 id="first-step-title">Your next task can be tiny</h2>
+      <p>When you add an assignment, this card will highlight one realistic place to begin.</p>
+      <a class="button primary" href="{{ url_for('new_task') }}">Create your first task</a>
+    </div>
+  {% endif %}
+  <div class="first-step-deco" aria-hidden="true"></div>
 </section>
+
+<div class="dashboard-grid">
+  <section class="panel garden-panel" aria-labelledby="garden-title">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">MOMENTUM GARDEN</span>
+        <h2 id="garden-title">Growth from real work</h2>
+      </div>
+    </div>
+    <div class="garden" role="img" aria-label="{{ completion_percent }} percent of tasks complete. {{ completed }} of {{ total }} tasks finished.">
+      {% for i in range(garden_slots) %}
+        <span class="sprout {% if i < garden_grown %}is-grown stage-{{ i }}{% else %}is-resting{% endif %}">
+          <span class="sprout-soil"></span>
+          <span class="sprout-plant"></span>
+        </span>
+      {% endfor %}
+    </div>
+    <p class="garden-caption">
+      {% if total %}
+        {{ completed }} of {{ total }} tasks complete · {{ completion_percent }}%
+      {% else %}
+        Plant the first seed by creating a task. Nothing is fabricated here.
+      {% endif %}
+    </p>
+  </section>
+
+  <section class="panel motivation-panel">
+    <span class="eyebrow">A GENTLE REMINDER</span>
+    <p class="motivation-text">{{ supportive_note }}</p>
+  </section>
+</div>
+
+<section class="stats-grid" aria-label="Progress overview">
+  <article class="stat-card stat-blush"><span class="stat-label">Total tasks</span><strong>{{ total }}</strong><span class="stat-foot">Everything you've saved</span></article>
+  <article class="stat-card stat-mint"><span class="stat-label">Completed</span><strong>{{ completed }}</strong><span class="stat-foot">Finished in this workspace</span></article>
+  <article class="stat-card stat-lavender"><span class="stat-label">Pending</span><strong>{{ pending_count }}</strong><span class="stat-foot">Waiting for a small start</span></article>
+  <article class="stat-card stat-yellow"><span class="stat-label">Completion</span><strong>{{ completion_percent }}%</strong><span class="stat-foot">{{ focus_count }} focus logs</span></article>
+</section>
+
 <div class="dashboard-grid">
   <section class="panel">
-    <div class="section-heading"><div><span class="eyebrow">YOUR TASKS</span><h2>Current priorities</h2></div><a href="{{ url_for('new_task') }}">+ New</a></div>
+    <div class="section-heading">
+      <div><span class="eyebrow">TODAY'S JOURNEY</span><h2>Your tasks</h2></div>
+      <a href="{{ url_for('new_task') }}">Add another</a>
+    </div>
     {% if tasks %}
       <div class="task-list">
-      {% for task in tasks %}
-        <a class="task-row" href="{{ url_for('task_detail', task_id=task.id) }}">
-          <span class="task-check {{ 'checked' if task.status == 'completed' else '' }}">{{ '✓' if task.status == 'completed' else '' }}</span>
-          <span class="task-main"><b>{{ task.title }}</b><small>{% if task.due_date %}Due {{ task.due_date.strftime('%b %d, %Y') }}{% else %}No due date{% endif %} · {{ task.subtasks|selectattr('completed')|list|length }}/{{ task.subtasks|length }} subtasks</small></span>
-          <span class="status {{ 'status-done' if task.status == 'completed' else '' }}">{{ task.status }}</span>
-        </a>
-      {% endfor %}
+        {% for task in tasks if task.status != 'completed' %}
+          {% set done_count = task.subtasks|selectattr('completed')|list|length %}
+          <article class="task-card">
+            <a class="task-row" href="{{ url_for('task_detail', task_id=task.id) }}">
+              <span class="task-check" aria-hidden="true"></span>
+              <span class="task-main">
+                <b>{{ task.title }}</b>
+                <small>
+                  {% if task.due_date %}Due {{ task.due_date.strftime('%b %d, %Y') }}{% else %}No due date{% endif %}
+                  · {{ done_count }}/{{ task.subtasks|length }} steps
+                  {% if task.planned_start %} · planned {{ task.planned_start.strftime('%b %d') }}{% endif %}
+                </small>
+              </span>
+              <span class="status">{{ task.status }}</span>
+            </a>
+          </article>
+        {% endfor %}
+        {% for task in tasks if task.status == 'completed' %}
+          {% set done_count = task.subtasks|selectattr('completed')|list|length %}
+          <article class="task-card is-complete">
+            <a class="task-row" href="{{ url_for('task_detail', task_id=task.id) }}">
+              <span class="task-check checked" aria-hidden="true">✓</span>
+              <span class="task-main">
+                <b>{{ task.title }}</b>
+                <small>{{ done_count }}/{{ task.subtasks|length }} steps complete</small>
+              </span>
+              <span class="status status-done">completed</span>
+            </a>
+          </article>
+        {% endfor %}
       </div>
     {% else %}
-      <div class="empty-state"><div class="empty-icon">↗</div><h3>Make your first task tiny</h3><p>Start with an assignment, revision topic, or project milestone.</p><a class="button secondary" href="{{ url_for('new_task') }}">Create a task</a></div>
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">✦</div>
+        <h3>Make your first task tiny</h3>
+        <p>Start with an assignment, revision topic, or project milestone.</p>
+        <a class="button secondary" href="{{ url_for('new_task') }}">Create a task</a>
+      </div>
     {% endif %}
   </section>
+
   <section class="panel recommendation-panel">
     <span class="eyebrow">A SUGGESTION FOR YOU</span>
-    <div class="recommend-icon">✳</div>
-    <h2>{{ recommendation.barrier }}</h2>
-    {% if not has_assessment %}<p class="muted">Take the short reflection assessment to personalize these suggestions.</p>{% endif %}
-    <ul class="recommend-list">{% for item in recommendation['items']%}<li>{{item}}<li>{% endfor %}</ul>
+    <div class="recommend-icon" aria-hidden="true">✳</div>
+    <h2>{{ recommendation.barrier if recommendation and recommendation.barrier else "Getting started" }}</h2>
+    {% if not has_assessment %}
+      <p class="muted">Take the short reflection assessment to personalize these suggestions.</p>
+    {% endif %}
+    {% if recommendation_items %}
+      <ul class="recommend-list">
+        {% for item in recommendation_items %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty-state compact">
+        <p>No suggestions yet. A short reflection will unlock practical next steps.</p>
+      </div>
+    {% endif %}
     <a class="button secondary full" href="{{ url_for('assessment') }}">{{ 'Update reflection' if has_assessment else 'Take the assessment' }}</a>
-    <p class="tiny-note">Suggestions are supportive prompts, not clinical advice.</p>
+    <p class="tiny-note">Suggestions are supportive, rule-based prompts, not clinical advice and not AI-generated diagnoses.</p>
   </section>
 </div>
 {% endblock %}

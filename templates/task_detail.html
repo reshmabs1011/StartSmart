@@ -1,36 +1,69 @@
 {% extends "base.html" %}
 {% block title %}{{ task.title }}{% endblock %}
 {% block content %}
+{% set done_count = task.subtasks|selectattr('completed')|list|length %}
+{% set percent = ((done_count / (task.subtasks|length)) * 100)|round|int if task.subtasks else 0 %}
 <div class="page-heading">
-  <div><a class="back-link" href="{{ url_for('dashboard') }}">← Dashboard</a><span class="eyebrow">TASK WORKSPACE</span><h1>{{ task.title }}</h1>
-  <p class="lead small-lead">{{ task.description or "Make the next action small enough to begin." }}</p></div>
+  <div>
+    <a class="back-link" href="{{ url_for('dashboard') }}">← Dashboard</a>
+    <span class="eyebrow">TASK WORKSPACE</span>
+    <h1>{{ task.title }}</h1>
+    <p class="lead small-lead">{{ task.description or "Make the next action small enough to begin." }}</p>
+  </div>
   <span class="status {{ 'status-done' if task.status == 'completed' else '' }}">{{ task.status }}</span>
 </div>
 <div class="detail-grid">
   <section class="panel">
-    <div class="section-heading"><div><span class="eyebrow">BREAK IT DOWN</span><h2>Your steps</h2></div></div>
-    {% set done_count = task.subtasks|selectattr('completed')|list|length %}
-    <div class="progress-label"><span>{{ done_count }} of {{ task.subtasks|length }} complete</span><span>{{ ((done_count / (task.subtasks|length)) * 100)|round|int if task.subtasks else 0 }}%</span></div>
-    <div class="progress-track"><span style="width: {{ ((done_count / (task.subtasks|length)) * 100) if task.subtasks else 0 }}%"></span></div>
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">BREAK IT DOWN</span>
+        <h2>Your steps</h2>
+      </div>
+    </div>
+    <div class="progress-label"><span>{{ done_count }} of {{ task.subtasks|length }} complete</span><span>{{ percent }}%</span></div>
+    <div class="progress-track" aria-hidden="true"><span style="width: {{ percent }}%"></span></div>
     {% for subtask in task.subtasks %}
       <div class="subtask-row">
-        <form method="post" action="{{ url_for('toggle_subtask', subtask_id=subtask.id) }}"><button class="round-check {{ 'is-done' if subtask.completed else '' }}" type="submit">{{ '✓' if subtask.completed else '' }}</button></form>
-        <span class="{{ 'completed-text' if subtask.completed else '' }}">{{ subtask.title }}</span>
+        <form method="post" action="{{ url_for('toggle_subtask', subtask_id=subtask.id) }}">
+          <button class="round-check {{ 'is-done' if subtask.completed else '' }}" type="submit" aria-label="{{ 'Mark incomplete' if subtask.completed else 'Mark complete' }}: {{ subtask.title }}">{{ '✓' if subtask.completed else '' }}</button>
+        </form>
+        <div class="subtask-body">
+          <span class="{{ 'completed-text' if subtask.completed else '' }}">{{ subtask.title }}</span>
+          {% if subtask.mini_deadline %}
+            <small class="chip chip-lavender">Mini-deadline {{ subtask.mini_deadline.strftime('%b %d, %Y') }}</small>
+          {% endif %}
+          <form class="deadline-form" method="post" action="{{ url_for('update_subtask_deadline', subtask_id=subtask.id) }}">
+            <label class="deadline-label" for="mini_deadline_{{ subtask.id }}">Mini-deadline
+              <input id="mini_deadline_{{ subtask.id }}" type="date" name="mini_deadline" value="{{ subtask.mini_deadline.isoformat() if subtask.mini_deadline else '' }}">
+            </label>
+            <button class="button ghost" type="submit">Save</button>
+          </form>
+        </div>
       </div>
+    {% else %}
+      <p class="muted">This task has no subtasks yet. You can still record a start or mark the whole task complete.</p>
     {% endfor %}
   </section>
   <aside class="panel side-panel">
-    <span class="eyebrow">NEXT ACTION</span><h2>Begin before you feel ready.</h2>
+    <span class="eyebrow">NEXT ACTION</span>
+    <h2>Begin before you feel ready.</h2>
     <p class="muted">Recording a start helps you notice when you began. It doesn't monitor your work outside this site.</p>
     {% if not task.actual_start %}
-      <form method="post" action="{{ url_for('start_task', task_id=task.id) }}"><button class="button primary full">I started this task</button></form>
+      <form method="post" action="{{ url_for('start_task', task_id=task.id) }}"><button class="button primary full" type="submit">I started this task</button></form>
     {% else %}
-      <div class="success-card">✓ Start recorded<br><small>{{ task.actual_start.strftime('%b %d, %Y at %H:%M') }}</small></div>
+      <div class="success-card">Start recorded<br><small>{{ task.actual_start.strftime('%b %d, %Y at %H:%M') }}</small></div>
     {% endif %}
     <div class="detail-meta"><span>Due date</span><b>{{ task.due_date.strftime('%b %d, %Y') if task.due_date else 'Not set' }}</b></div>
     <div class="detail-meta"><span>Planned start</span><b>{{ task.planned_start.strftime('%b %d, %H:%M') if task.planned_start else 'Not set' }}</b></div>
-    <a class="button secondary full" href="{{ url_for('focus') }}">Start a focus session</a>
-    <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}" onsubmit="return confirm('Delete this task and its subtasks?');"><button class="button danger full" type="submit">Delete task</button></form>
+    {% if task.status != 'completed' %}
+      <form method="post" action="{{ url_for('complete_task', task_id=task.id) }}">
+        <button class="button secondary full" type="submit">Mark task complete</button>
+      </form>
+    {% endif %}
+    <a class="button secondary full" href="{{ url_for('focus') }}">Open Focus Cocoon</a>
+    <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}" onsubmit="return confirm('Delete this task and its subtasks?');">
+      <button class="button danger full" type="submit">Delete task</button>
+    </form>
   </aside>
 </div>
 {% endblock %}

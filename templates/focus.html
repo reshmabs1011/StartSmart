@@ -1,33 +1,65 @@
 {% extends "base.html" %}
-{% block title %}Focus session{% endblock %}
+{% block title %}Focus Cocoon{% endblock %}
 {% block content %}
-<div class="narrow">
-  <span class="eyebrow">FOCUS TIME</span><h1>Just this next step.</h1>
-  <p class="lead small-lead">Choose a short session. This starter version logs your session when you submit; it does not run a verified countdown.</p>
-  <section class="panel timer-panel">
-    <div class="timer-face" id="timerFace">15:00</div>
-    <div class="timer-controls">
+<div class="narrow cocoon-page">
+  <span class="eyebrow">FOCUS COCOON</span>
+  <h1>A quiet pocket of time.</h1>
+  <p class="lead small-lead">Choose a length, start when you are ready, and pause whenever you need. Logging a session records participation, not proof of uninterrupted work.</p>
+  <section class="panel timer-panel cocoon-panel">
+    <div class="cocoon-ring-wrap">
+      <svg class="cocoon-ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+        <circle class="ring-fg" id="timerRing" cx="60" cy="60" r="52" pathLength="100"></circle>
+      </svg>
+      <div class="timer-face" id="timerFace" aria-live="polite">15:00</div>
+    </div>
+    <p class="timer-status" id="timerStatus">Ready when you are.</p>
+    <div class="timer-controls duration-row" role="group" aria-label="Session length">
       <button class="button secondary" type="button" data-minutes="15">15 min</button>
       <button class="button secondary" type="button" data-minutes="25">25 min</button>
       <button class="button secondary" type="button" data-minutes="45">45 min</button>
     </div>
-    <p class="muted center">Preview timer only. Use the form below to record a session.</p>
+    <div class="timer-controls">
+      <button class="button primary" type="button" id="timerStart">Start</button>
+      <button class="button secondary" type="button" id="timerPause" disabled>Pause</button>
+      <button class="button ghost" type="button" id="timerReset">Reset</button>
+    </div>
+    <p class="muted center" id="timerCompleteNote" hidden>You stayed with it for a full session. If you want a record, log it below.</p>
     <form method="post" class="focus-log-form">
-      <label>Session length
+      <label for="duration">Session length
         <select name="duration" id="duration">
-          <option value="15">15 minutes</option><option value="25">25 minutes</option><option value="45">45 minutes</option>
+          <option value="15">15 minutes</option>
+          <option value="25">25 minutes</option>
+          <option value="45">45 minutes</option>
         </select>
       </label>
-      <label>Optional task
-        <select name="task_id"><option value="">General study session</option>{% for task in tasks %}<option value="{{ task.id }}">{{ task.title }}</option>{% endfor %}</select>
+      <label for="task_id">Optional task
+        <select name="task_id" id="task_id">
+          <option value="">General study session</option>
+          {% for task in tasks %}
+            <option value="{{ task.id }}">{{ task.title }}</option>
+          {% endfor %}
+        </select>
       </label>
       <button class="button primary full" type="submit">Log focus session</button>
     </form>
   </section>
-  <section class="panel recent-panel"><h2>Recent logged sessions</h2>
-    {% if recent %}{% for item in recent %}<div class="activity-row"><span class="activity-dot"></span><span>{{ item.duration_minutes }}-minute session</span><small>{{ item.started_at.strftime('%b %d, %H:%M') }}</small></div>{% endfor %}
-    {% else %}<p class="muted">Your logged sessions will appear here.</p>{% endif %}
+  <section class="panel recent-panel">
+    <h2>Recent logged sessions</h2>
+    {% if recent %}
+      {% for item in recent %}
+        <div class="activity-row">
+          <span class="activity-dot"></span>
+          <span>{{ item.duration_minutes }}-minute session</span>
+          <small>{{ item.started_at.strftime('%b %d, %H:%M') }}</small>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="muted">Your logged sessions will appear here.</p>
+    {% endif %}
   </section>
 </div>
+{% endblock %}
+{% block scripts %}
 <script src="{{ url_for('static', filename='js/focus.js') }}"></script>
 {% endblock %}

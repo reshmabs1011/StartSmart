@@ -2,15 +2,25 @@
 {% block title %}Add a task{% endblock %}
 {% block content %}
 <div class="narrow">
-  <span class="eyebrow">PLAN A SMALL START</span><h1>Add an assignment</h1><p class="lead small-lead">You can adjust the plan as you learn what works for you.</p>
+  <span class="eyebrow">PLAN A SMALL START</span>
+  <h1>Add an assignment</h1>
+  <p class="lead small-lead">You can adjust the plan as you learn what works for you.</p>
   <form method="post" class="form-card wide">
-    <label>Task or assignment title<input type="text" name="title" maxlength="200" required placeholder="e.g. Prepare database project report"></label>
-    <label>Notes (optional)<textarea name="description" rows="3" placeholder="What needs to be done?"></textarea></label>
+    <label for="title">Task or assignment title
+      <input id="title" type="text" name="title" maxlength="200" required placeholder="e.g. Prepare database project report">
+    </label>
+    <label for="description">Notes (optional)
+      <textarea id="description" name="description" rows="3" placeholder="What needs to be done?"></textarea>
+    </label>
     <div class="two-col">
-      <label>Due date<input type="date" name="due_date"></label>
-      <label>Planned start (optional)<input type="datetime-local" name="planned_start"></label>
+      <label for="due_date">Due date
+        <input id="due_date" type="date" name="due_date">
+      </label>
+      <label for="planned_start">Planned start (optional)
+        <input id="planned_start" type="datetime-local" name="planned_start">
+      </label>
     </div>
-    <div class="notice">We'll add a few starter subtasks. Treat them as editable planning ideas, not a fixed rule.</div>
+    <div class="notice">We'll add a few starter subtasks with optional mini-deadlines you can set later. Treat them as planning ideas, not a fixed rule.</div>
     <button class="button primary full" type="submit">Create task and steps</button>
   </form>
 </div>

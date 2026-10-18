@@ -1,31 +1,96 @@
 {% extends "base.html" %}
-{% block title %}Start small{% endblock %}
+{% block title %}Welcome{% endblock %}
 {% block content %}
 <section class="hero">
   <div class="hero-copy">
-    <span class="eyebrow">A kinder way to get started</span>
-    <h1>Make progress,<br><em>one small step</em> at a time.</h1>
-    <p class="lead">Understand what gets in your way, turn big assignments into manageable actions, and notice your progress without the guilt.</p>
+    <span class="eyebrow">StartSmart · Progress, not pressure</span>
+    <h1>You don't need to finish everything. Just start something.</h1>
+    <p class="lead">Big tasks can feel overwhelming. StartSmart helps you understand your procrastination patterns, find your next small step, and build momentum at your own pace.</p>
     <div class="hero-actions">
-      <a class="button primary" href="{{ url_for('register') }}">Create your workspace</a>
-      <a class="button secondary" href="{{ url_for('login') }}">I already have an account</a>
+      <a class="button primary" href="{{ url_for('register') }}">Start My Journey</a>
+      <a class="button secondary" href="#how-it-works">Explore StartSmart</a>
     </div>
-    <div class="trust-note">Designed for student planning · Private account-based workspace</div>
+    <p class="trust-note">A private student workspace for beginning, not burning out.</p>
   </div>
-  <div class="hero-card">
-    <div class="mini-top"><span class="dot"></span> TODAY'S PLAN <span class="mini-tag">3 small steps</span></div>
-    <h3>Start your assignment</h3>
-    <p class="muted">You don't have to finish it all right now.</p>
-    <div class="step done"><span>✓</span><div><b>Open your notes</b><small>2 minutes</small></div></div>
-    <div class="step active"><span>2</span><div><b>Write three headings</b><small>5 minutes · Next step</small></div></div>
-    <div class="step"><span>3</span><div><b>Draft one paragraph</b><small>10 minutes</small></div></div>
-    <div class="progress-line"><span></span></div>
-    <small class="muted">Momentum comes from beginning.</small>
+  <div class="hero-stage" aria-hidden="true">
+    <div class="hero-blob blush"></div>
+    <div class="hero-blob mint"></div>
+    <article class="hero-card">
+      <div class="mini-top"><span class="dot"></span> TODAY'S GENTLE PLAN <span class="mini-tag">start small</span></div>
+      <h3>One page. One breath. One step.</h3>
+      <p class="muted">You don't have to finish it all right now.</p>
+      <div class="step done"><span>✓</span><div><b>Open your notes</b><small>2 minutes</small></div></div>
+      <div class="step active"><span>2</span><div><b>Write three headings</b><small>5 minutes · Next step</small></div></div>
+      <div class="step"><span>3</span><div><b>Draft one paragraph</b><small>10 minutes</small></div></div>
+      <div class="progress-line"><span></span></div>
+      <small class="muted">Momentum comes from beginning.</small>
+    </article>
+    <div class="hero-plant">
+      <span class="pot"></span>
+      <span class="stem"></span>
+      <span class="leaf left"></span>
+      <span class="leaf right"></span>
+      <span class="bloom"></span>
+    </div>
   </div>
 </section>
+
+<section id="how-it-works" class="band band-blush">
+  <div class="band-copy">
+    <span class="eyebrow">HOW IT WORKS</span>
+    <h2>A calmer way to begin</h2>
+    <p>StartSmart is a short loop: notice what gets in the way, choose one next action, and record the progress you actually made.</p>
+  </div>
+  <ol class="how-grid">
+    <li>
+      <span class="how-num">01</span>
+      <h3>Reflect</h3>
+      <p>Answer a brief, non-clinical questionnaire about study habits.</p>
+    </li>
+    <li>
+      <span class="how-num">02</span>
+      <h3>Plan a tiny step</h3>
+      <p>Turn a big assignment into starter subtasks you can actually start.</p>
+    </li>
+    <li>
+      <span class="how-num">03</span>
+      <h3>Notice progress</h3>
+      <p>Watch your Momentum Garden grow from real completed work.</p>
+    </li>
+  </ol>
+</section>
+
 <section class="feature-grid">
-  <article class="feature"><div class="feature-icon">◎</div><h3>Understand your barriers</h3><p>Reflect on confidence, planning, fear of failure, anxiety, and distraction.</p></article>
-  <article class="feature"><div class="feature-icon">↗</div><h3>Get a useful next step</h3><p>Receive practical suggestions connected to the challenges you report.</p></article>
-  <article class="feature"><div class="feature-icon">▥</div><h3>See your progress</h3><p>Track tasks, subtasks, focus-session participation, and study patterns.</p></article>
+  <article class="feature feature-blush">
+    <div class="feature-icon" aria-hidden="true">◎</div>
+    <h3>Understand procrastination</h3>
+    <p>See which patterns show up most — overwhelm, distraction, worry, or low confidence — without a medical label.</p>
+  </article>
+  <article class="feature feature-lavender">
+    <div class="feature-icon" aria-hidden="true">✎</div>
+    <h3>Plan tasks kindly</h3>
+    <p>Create assignments with due dates, planned starts, and small steps so the next action is obvious.</p>
+  </article>
+  <article class="feature feature-mint">
+    <div class="feature-icon" aria-hidden="true">🌱</div>
+    <h3>Track progress gently</h3>
+    <p>Completion, focus logs, and activity stay honest: they describe what you recorded here, not your worth.</p>
+  </article>
+</section>
+
+<section class="band band-mint quote-band">
+  <blockquote>
+    <p>Progress, not perfection.</p>
+    <cite>You can build momentum without finishing everything today.</cite>
+  </blockquote>
+</section>
+
+<section class="cta-panel">
+  <div>
+    <span class="eyebrow">WHEN YOU'RE READY</span>
+    <h2>Begin with one small step</h2>
+    <p>Create a private account, take the reflection, or add the assignment that's been waiting.</p>
+  </div>
+  <a class="button primary" href="{{ url_for('register') }}">Start My Journey</a>
 </section>
 {% endblock %}

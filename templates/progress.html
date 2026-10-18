@@ -1,28 +1,57 @@
 {% extends "base.html" %}
 {% block title %}Progress{% endblock %}
 {% block content %}
-<div class="page-heading"><div><span class="eyebrow">NOTICE YOUR PROGRESS</span><h1>Your progress, not perfection.</h1><p class="lead small-lead">These numbers summarize activity recorded in this website only.</p></div></div>
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">NOTICE YOUR PROGRESS</span>
+    <h1>Your progress, not perfection.</h1>
+    <p class="lead small-lead">These numbers summarize activity recorded in this website only.</p>
+  </div>
+</div>
 <section class="stats-grid">
-  <article class="stat-card"><span class="stat-label">Completed tasks</span><strong>{{ completed_tasks }}</strong><span class="stat-foot">Full tasks marked complete</span></article>
-  <article class="stat-card"><span class="stat-label">Subtasks complete</span><strong>{{ done_subtasks }}<small> / {{ total_subtasks }}</small></strong><span class="stat-foot">Small steps add up</span></article>
-  <article class="stat-card"><span class="stat-label">Focus minutes logged</span><strong>{{ total_focus }}</strong><span class="stat-foot">Participation records</span></article>
-  <article class="stat-card"><span class="stat-label">Average start latency</span><strong>{% if avg_latency is not none %}{{ avg_latency }}<small> min</small>{% else %}—{% endif %}</strong><span class="stat-foot">Only tasks with both times</span></article>
+  <article class="stat-card stat-mint"><span class="stat-label">Completed tasks</span><strong>{{ completed_tasks }}</strong><span class="stat-foot">Full tasks marked complete</span></article>
+  <article class="stat-card stat-blush"><span class="stat-label">Subtasks complete</span><strong>{{ done_subtasks }}<small> / {{ total_subtasks }}</small></strong><span class="stat-foot">Small steps add up</span></article>
+  <article class="stat-card stat-lavender"><span class="stat-label">Focus minutes logged</span><strong>{{ total_focus }}</strong><span class="stat-foot">Participation records</span></article>
+  <article class="stat-card stat-yellow"><span class="stat-label">Average start latency</span><strong>{% if avg_latency is not none %}{{ avg_latency }}<small> min</small>{% else %}—{% endif %}</strong><span class="stat-foot">Only tasks with both times</span></article>
 </section>
 <section class="panel progress-panel">
   <div class="section-heading"><div><span class="eyebrow">TASK COMPLETION</span><h2>Subtask progress</h2></div></div>
   {% set percent = ((done_subtasks / total_subtasks) * 100)|round|int if total_subtasks else 0 %}
-  <div class="big-progress"><div class="big-progress-head"><b>{{ percent }}%</b><span>{{ done_subtasks }} of {{ total_subtasks }} subtasks completed</span></div><div class="progress-track"><span style="width: {{ percent }}%"></span></div></div>
+  <div class="big-progress">
+    <div class="big-progress-head"><b>{{ percent }}%</b><span>{{ done_subtasks }} of {{ total_subtasks }} subtasks completed</span></div>
+    <div class="progress-track" aria-hidden="true"><span style="width: {{ percent }}%"></span></div>
+  </div>
   {% if tasks %}
   <div class="task-list">
-  {% for task in tasks %}
-    {% set done = task.subtasks|selectattr('completed')|list|length %}
-    <div class="task-row static-row"><span class="task-check {{ 'checked' if task.status == 'completed' else '' }}">{{ '✓' if task.status == 'completed' else '' }}</span><span class="task-main"><b>{{ task.title }}</b><small>{{ done }}/{{ task.subtasks|length }} subtasks complete</small></span><span class="status">{{ task.status }}</span></div>
-  {% endfor %}
+    {% for task in tasks %}
+      {% set done = task.subtasks|selectattr('completed')|list|length %}
+      <div class="task-row static-row">
+        <span class="task-check {{ 'checked' if task.status == 'completed' else '' }}">{{ '✓' if task.status == 'completed' else '' }}</span>
+        <span class="task-main"><b>{{ task.title }}</b><small>{{ done }}/{{ task.subtasks|length }} subtasks complete</small></span>
+        <span class="status {{ 'status-done' if task.status == 'completed' else '' }}">{{ task.status }}</span>
+      </div>
+    {% endfor %}
   </div>
-  {% else %}<p class="muted">Create a task to begin collecting progress data.</p>{% endif %}
+  {% else %}
+    <div class="empty-state">
+      <h3>No progress yet — and that's okay</h3>
+      <p class="muted">Create a task to begin collecting progress data.</p>
+      <a class="button secondary" href="{{ url_for('new_task') }}">Create a task</a>
+    </div>
+  {% endif %}
 </section>
-<section class="panel"><div class="section-heading"><div><span class="eyebrow">RECENT ACTIVITY</span><h2>What you've recorded</h2></div></div>
-{% if events %}{% for event in events %}<div class="activity-row"><span class="activity-dot"></span><span>{{ event.event_type|replace('_',' ')|title }}</span><small>{{ event.occurred_at.strftime('%b %d, %H:%M') }}</small></div>{% endfor %}
-{% else %}<p class="muted">Activity will appear as you use the platform.</p>{% endif %}
+<section class="panel">
+  <div class="section-heading"><div><span class="eyebrow">RECENT ACTIVITY</span><h2>What you've recorded</h2></div></div>
+  {% if events %}
+    {% for event in events %}
+      <div class="activity-row">
+        <span class="activity-dot"></span>
+        <span>{{ event.event_type|replace('_',' ')|title }}</span>
+        <small>{{ event.occurred_at.strftime('%b %d, %H:%M') }}</small>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="muted">Activity will appear as you use the platform.</p>
+  {% endif %}
 </section>
 {% endblock %}
