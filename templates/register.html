@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<div class="form-wrap">
+  <div class="form-card">
+    <span class="eyebrow">YOUR PERSONAL WORKSPACE</span><h1>Create an account</h1>
+    <p class="muted">Start with one small step. Use an email and a password you haven't used elsewhere.</p>
+    <form method="post">
+      <label>Email address<input type="email" name="email" required autocomplete="email"></label>
+      <label>Password<input type="password" name="password" minlength="8" required autocomplete="new-password"><small>At least 8 characters for this prototype.</small></label>
+      <button class="button primary full" type="submit">Create account</button>
+    </form>
+    <p class="form-bottom">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+  </div>
+</div>
+{% endblock %}

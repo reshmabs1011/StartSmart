@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Focus session{% endblock %}
+{% block content %}
+<div class="narrow">
+  <span class="eyebrow">FOCUS TIME</span><h1>Just this next step.</h1>
+  <p class="lead small-lead">Choose a short session. This starter version logs your session when you submit; it does not run a verified countdown.</p>
+  <section class="panel timer-panel">
+    <div class="timer-face" id="timerFace">15:00</div>
+    <div class="timer-controls">
+      <button class="button secondary" type="button" data-minutes="15">15 min</button>
+      <button class="button secondary" type="button" data-minutes="25">25 min</button>
+      <button class="button secondary" type="button" data-minutes="45">45 min</button>
+    </div>
+    <p class="muted center">Preview timer only. Use the form below to record a session.</p>
+    <form method="post" class="focus-log-form">
+      <label>Session length
+        <select name="duration" id="duration">
+          <option value="15">15 minutes</option><option value="25">25 minutes</option><option value="45">45 minutes</option>
+        </select>
+      </label>
+      <label>Optional task
+        <select name="task_id"><option value="">General study session</option>{% for task in tasks %}<option value="{{ task.id }}">{{ task.title }}</option>{% endfor %}</select>
+      </label>
+      <button class="button primary full" type="submit">Log focus session</button>
+    </form>
+  </section>
+  <section class="panel recent-panel"><h2>Recent logged sessions</h2>
+    {% if recent %}{% for item in recent %}<div class="activity-row"><span class="activity-dot"></span><span>{{ item.duration_minutes }}-minute session</span><small>{{ item.started_at.strftime('%b %d, %H:%M') }}</small></div>{% endfor %}
+    {% else %}<p class="muted">Your logged sessions will appear here.</p>{% endif %}
+  </section>
+</div>
+<script src="{{ url_for('static', filename='js/focus.js') }}"></script>
+{% endblock %}

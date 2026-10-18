@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Start small{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">A kinder way to get started</span>
+    <h1>Make progress,<br><em>one small step</em> at a time.</h1>
+    <p class="lead">Understand what gets in your way, turn big assignments into manageable actions, and notice your progress without the guilt.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="{{ url_for('register') }}">Create your workspace</a>
+      <a class="button secondary" href="{{ url_for('login') }}">I already have an account</a>
+    </div>
+    <div class="trust-note">Designed for student planning · Private account-based workspace</div>
+  </div>
+  <div class="hero-card">
+    <div class="mini-top"><span class="dot"></span> TODAY'S PLAN <span class="mini-tag">3 small steps</span></div>
+    <h3>Start your assignment</h3>
+    <p class="muted">You don't have to finish it all right now.</p>
+    <div class="step done"><span>✓</span><div><b>Open your notes</b><small>2 minutes</small></div></div>
+    <div class="step active"><span>2</span><div><b>Write three headings</b><small>5 minutes · Next step</small></div></div>
+    <div class="step"><span>3</span><div><b>Draft one paragraph</b><small>10 minutes</small></div></div>
+    <div class="progress-line"><span></span></div>
+    <small class="muted">Momentum comes from beginning.</small>
+  </div>
+</section>
+<section class="feature-grid">
+  <article class="feature"><div class="feature-icon">◎</div><h3>Understand your barriers</h3><p>Reflect on confidence, planning, fear of failure, anxiety, and distraction.</p></article>
+  <article class="feature"><div class="feature-icon">↗</div><h3>Get a useful next step</h3><p>Receive practical suggestions connected to the challenges you report.</p></article>
+  <article class="feature"><div class="feature-icon">▥</div><h3>See your progress</h3><p>Track tasks, subtasks, focus-session participation, and study patterns.</p></article>
+</section>
+{% endblock %}
